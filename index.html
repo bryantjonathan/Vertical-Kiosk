@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>Telkom University</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/telkom-favicon.png">
+  <link rel="shortcut icon" href="images/telkom-favicon.png">
+  <link rel="apple-touch-icon" href="images/telkom-favicon.png">
+  
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="m-0 p-0 h-full overflow-hidden bg-black font-sans">
   <!-- Top Bar -->
@@ -18,9 +25,9 @@
       </button>
       
       <div class="hidden group-hover:block absolute right-0 top-full bg-white min-w-48 shadow-lg rounded-lg z-50 opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-        <a href="#" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Akreditasi</a>
-        <a href="#" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">X</a>
-        <a href="#" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Y</a>
+        <a href="" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Akreditasi</a>
+        <a href="" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">X</a>
+        <a href="" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Y</a>
       </div>
     </div>
   </div>
@@ -29,6 +36,11 @@
   <div class="absolute top-36 left-0 w-full overflow-hidden" style="height: calc(100% - 9rem);" id="slideshow-container">
     <div class="flex h-full transition-transform duration-500 ease-in-out" id="slides"></div>
     <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-6 z-10" id="dots"></div>
+    
+    <!-- Fullscreen Toggle Button -->
+    <button id="fullscreen-toggle" class="absolute bottom-5 left-5 bg-black bg-opacity-50 hover:bg-opacity-70 text-white w-12 h-12 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white border-opacity-20 flex items-center justify-center">
+      <i class="fas fa-expand text-lg"></i>
+    </button>
   </div>
 
   <script src="js/slideshow.js"></script>

@@ -1,12 +1,15 @@
-// fullscreen.js - Fullscreen functionality
+// Fullscreen functionality
 class FullscreenManager {
     constructor() {
         this.isFullscreenRequested = false;
+        this.toggleButton = null;
         this.init();
     }
     
     init() {
+        this.toggleButton = document.getElementById('fullscreen-toggle');
         this.bindEvents();
+        this.updateButtonIcon();
     }
     
     async requestFullscreen() {
@@ -56,17 +59,34 @@ class FullscreenManager {
                  document.msFullscreenElement);
     }
     
+    updateButtonIcon() {
+        if (!this.toggleButton) return;
+        
+        const icon = this.toggleButton.querySelector('i');
+        if (this.isFullscreen()) {
+            icon.className = 'fas fa-compress text-lg';
+            this.toggleButton.title = 'Exit Fullscreen';
+        } else {
+            icon.className = 'fas fa-expand text-lg';
+            this.toggleButton.title = 'Enter Fullscreen';
+        }
+    }
+    
     bindEvents() {
-        // Request fullscreen on first user interaction
-        document.addEventListener('click', () => {
-            this.requestFullscreen();
-        }, { once: true });
+        // Toggle fullscreen on button click
+        if (this.toggleButton) {
+            this.toggleButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                this.toggleFullscreen();
+            });
+        }
         
         // Handle fullscreen change events
         document.addEventListener('fullscreenchange', () => {
             if (!this.isFullscreen()) {
                 this.isFullscreenRequested = false;
             }
+            this.updateButtonIcon();
         });
         
         // Handle escape key to exit fullscreen
@@ -74,6 +94,19 @@ class FullscreenManager {
             if (e.key === 'Escape' && this.isFullscreen()) {
                 this.exitFullscreen();
             }
+        });
+        
+        // Handle different fullscreen change events for cross-browser compatibility
+        document.addEventListener('mozfullscreenchange', () => {
+            this.updateButtonIcon();
+        });
+        
+        document.addEventListener('webkitfullscreenchange', () => {
+            this.updateButtonIcon();
+        });
+        
+        document.addEventListener('msfullscreenchange', () => {
+            this.updateButtonIcon();
         });
     }
 }

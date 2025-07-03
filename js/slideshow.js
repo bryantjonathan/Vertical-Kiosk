@@ -1,4 +1,4 @@
-// slideshow.js - Slideshow functionality
+// Slideshow functionality
 class Slideshow {
     constructor(config = {}) {
         this.numSlides = config.numSlides || 5;
