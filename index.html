@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Telkom University</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: rgba(255, 255, 255, 1);
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 10;
+    }
+
+    .top-bar img {
+      height: 150px;
+    }
+
+    .slideshow-container {
+      position: absolute;
+      top: 80px; /* Sesuaikan dengan tinggi bar */
+      left: 0;
+      width: 100%;
+      height: calc(100% - 80px);
+      overflow: hidden;
+    }
+
+    .slides {
+      display: flex;
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <img src="telkom-logo.png" alt="Logo" />
+  </div>
+
+  <div class="slideshow-container" id="slideshow-container">
+    <div class="slides" id="slides"></div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <script>
+    const numSlides = 5;
+    const slidesContainer = document.getElementById('slides');
+    const dotsContainer = document.getElementById('dots');
+    const slideshowContainer = document.getElementById('slideshow-container');
+
+    for (let i = 0; i < numSlides; i++) {
+      const slide = document.createElement('div');
+      slide.className = 'slide';
+      slide.innerHTML = `<img src="https://picsum.photos/1920/1080?random=${i}" alt="Image ${i + 1}" />`;
+      slidesContainer.appendChild(slide);
+
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => showSlide(i));
+      dotsContainer.appendChild(dot);
+    }
+
+    let currentSlide = 0;
+    let slideInterval;
+
+    function showSlide(index) {
+      currentSlide = index;
+      const offset = -index * window.innerWidth;
+      slidesContainer.style.transform = `translateX(${offset}px)`;
+      document.querySelectorAll('.dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      showSlide(currentSlide);
+    });
+
+    function startSlideshow() {
+      slideInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % numSlides;
+        showSlide(currentSlide);
+      }, 3000);
+    }
+
+    function stopSlideshow() {
+      clearInterval(slideInterval);
+    }
+
+    startSlideshow();
+
+    // Touch handling
+    let startX = 0;
+    let isSwiping = false;
+
+    slideshowContainer.addEventListener('touchstart', e => {
+      stopSlideshow(); // pause saat disentuh
+      startX = e.touches[0].clientX;
+      isSwiping = true;
+    });
+
+    slideshowContainer.addEventListener('touchmove', e => {
+      if (!isSwiping) return;
+      const deltaX = e.touches[0].clientX - startX;
+      // opsional: bisa ditambah efek drag di sini
+    });
+
+    slideshowContainer.addEventListener('touchend', e => {
+      const endX = e.changedTouches[0].clientX;
+      const deltaX = endX - startX;
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+          currentSlide = currentSlide > 0 ? currentSlide - 1 : 0;
+        } else {
+          currentSlide = currentSlide < numSlides - 1 ? currentSlide + 1 : numSlides - 1;
+        }
+        showSlide(currentSlide);
+      }
+      isSwiping = false;
+      startSlideshow(); // lanjut autoplay setelah swipe selesai
+    });
+  </script>
+</body>
+</html>
