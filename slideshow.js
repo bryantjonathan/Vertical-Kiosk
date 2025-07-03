@@ -1,39 +1,44 @@
-const numSlides = 5; 
-const slidesContainer = document.getElementById('slides'); 
-const dotsContainer = document.getElementById('dots'); 
-const slideshowContainer = document.getElementById('slideshow-container'); 
- 
+// Fullscreen (triggered oleh user action)
+document.addEventListener('click', function() {
+    document.documentElement.requestFullscreen();
+});
+
+const numSlides = 5;
+const slidesContainer = document.getElementById('slides');
+const dotsContainer = document.getElementById('dots');
+const slideshowContainer = document.getElementById('slideshow-container');
+
 // Membuat slides dan dots
-for (let i = 0; i < numSlides; i++) { 
-    const slide = document.createElement('div'); 
-    slide.className = 'slide'; 
-    slide.innerHTML = `<img src="https://picsum.photos/1920/1080?random=${i}" alt="Image ${i + 1}" />`; 
-    slidesContainer.appendChild(slide); 
+for (let i = 0; i < numSlides; i++) {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+    slide.innerHTML = `<img src="https://picsum.photos/1920/1080?random=${i}" alt="Image ${i + 1}" />`;
+    slidesContainer.appendChild(slide);
      
-    const dot = document.createElement('div'); 
-    dot.className = 'dot'; 
-    if (i === 0) dot.classList.add('active'); 
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    if (i === 0) dot.classList.add('active');
     dot.addEventListener('click', () => {
         pauseAutoSlide(); // Pause auto slide selama 5 detik
         showSlide(i);
     });
-    dotsContainer.appendChild(dot); 
-} 
- 
+    dotsContainer.appendChild(dot);
+}
+
 let currentSlide = 0;
 let autoSlideInterval;
 let isAutoPlayActive = true;
-let pauseTimeout; 
+let pauseTimeout;
  
-function showSlide(index) { 
-    currentSlide = index; 
-    const offset = -index * window.innerWidth; 
-    slidesContainer.style.transform = `translateX(${offset}px)`; 
+function showSlide(index) {
+    currentSlide = index;
+    const offset = -index * window.innerWidth;
+    slidesContainer.style.transform = `translateX(${offset}px)`;
     
     // Update dots
-    document.querySelectorAll('.dot').forEach((dot, i) => { 
-        dot.classList.toggle('active', i === index); 
-    }); 
+    document.querySelectorAll('.dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
 }
 
 function startAutoSlide() {
@@ -60,12 +65,12 @@ function pauseAutoSlide() {
     pauseTimeout = setTimeout(() => {
         isAutoPlayActive = true;
     }, 5000);
-} 
+}
  
 // Handle resize window
-window.addEventListener('resize', () => { 
-    showSlide(currentSlide); 
-}); 
+window.addEventListener('resize', () => {
+    showSlide(currentSlide);
+});
 
 // Touch handling untuk swipe
 let startX = 0;
@@ -102,6 +107,6 @@ slideshowContainer.addEventListener('touchend', e => {
     
     isSwiping = false;
 });
- 
+
 // Mulai auto slideshow
 startAutoSlide();
