@@ -3,18 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <title>Telkom University</title>
-  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="top-bar">
-    <img src="images/telkom-logo.png" alt="Logo" />
+<body class="m-0 p-0 h-full overflow-hidden bg-black font-sans">
+  <!-- Top Bar -->
+  <div class="fixed top-0 left-0 w-full h-36 bg-white flex items-center justify-between px-5 z-10">
+    <img src="images/telkom-logo.png" alt="Logo" class="h-56" />
+    
+    <!-- Dropdown About Menu -->
+    <div class="relative ml-auto group">
+      <button class="bg-white border-none text-gray-800 text-lg font-bold py-3 px-5 cursor-pointer rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:bg-gray-50">
+        About
+        <div class="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-800 transition-transform duration-300 group-hover:rotate-180"></div>
+      </button>
+      
+      <div class="hidden group-hover:block absolute right-0 top-full bg-white min-w-48 shadow-lg rounded-lg z-50 opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+        <a href="#" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Akreditasi</a>
+        <a href="#" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">X</a>
+        <a href="#" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Y</a>
+      </div>
+    </div>
   </div>
 
-  <div class="slideshow-container" id="slideshow-container">
-    <div class="slides" id="slides"></div>
-    <div class="dots" id="dots"></div>
+  <!-- Slideshow -->
+  <div class="absolute top-36 left-0 w-full overflow-hidden" style="height: calc(100% - 9rem);" id="slideshow-container">
+    <div class="flex h-full transition-transform duration-500 ease-in-out" id="slides"></div>
+    <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-6 z-10" id="dots"></div>
   </div>
 
-  <script src="slideshow.js"></script>
+  <script src="js/slideshow.js"></script>
+  <script src="js/fullscreen.js"></script>
 </body>
 </html>
