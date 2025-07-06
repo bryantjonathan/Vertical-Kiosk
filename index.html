@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Telkom University</title>
   
   <!-- Favicon -->
@@ -14,8 +15,8 @@
 </head>
 <body class="m-0 p-0 h-full overflow-hidden bg-black font-sans">
   <!-- Top Bar -->
-  <div class="fixed top-0 left-0 w-full h-36 bg-white flex items-center justify-between px-5 z-10">
-    <img src="images/telkom-logo.png" alt="Logo" class="h-56" />
+  <div class="fixed top-0 left-0 w-full h-[10vh] bg-white flex items-center justify-between px-5 z-10">
+    <img src="images/telkom-logo.png" alt="Logo" class="h-[8vh] max-h-24" />
     
     <!-- Dropdown About Menu -->
     <div class="relative ml-auto group">
@@ -33,7 +34,7 @@
   </div>
 
   <!-- Slideshow -->
-  <div class="absolute top-36 left-0 w-full overflow-hidden" style="height: calc(100% - 9rem);" id="slideshow-container">
+  <div class="absolute top-[10vh] left-0 w-full overflow-hidden" style="height: calc(90vh);" id="slideshow-container">
     <div class="flex h-full transition-transform duration-500 ease-in-out" id="slides"></div>
     <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-6 z-10" id="dots"></div>
     

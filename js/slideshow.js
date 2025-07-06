@@ -51,7 +51,8 @@ class Slideshow {
     
     showSlide(index) {
         this.currentSlide = index;
-        const offset = -index * window.innerWidth;
+        const slideWidth = this.slideshowContainer.clientWidth;
+        const offset = -index * slideWidth;
         this.slidesContainer.style.transform = `translateX(${offset}px)`;
         this.updateDots();
     }
