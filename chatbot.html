@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Telkom University</title>
+
+  <link rel="icon" type="image/png" href="images/telkom-favicon.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style/chatbot.css">
+</head>
+
+<body class="bg-black min-h-screen relative overflow-hidden">    
+    <!-- Top Bar -->
+    <header class="fixed top-0 left-0 w-full h-[10vh] bg-white flex items-center justify-between px-5 z-20">
+        <div class="flex items-center gap-8">
+            <img src="images/telkom-logo.png" alt="Logo" class="h-28" onerror="this.style.display='none'" />
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">TelU Bot</h1>
+                <p class="text-sm text-gray-600">Tanya Bot Telkom University</p>
+            </div>
+        </div>
+        
+        <!-- Dropdown Menu -->
+        <div class="relative ml-auto" id="dropdownWrapper">
+            <button id="dropdownToggle" class="bg-white border-none text-gray-800 text-lg font-bold py-3 px-5 cursor-pointer rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:bg-gray-50">
+                More
+                <div id="dropdownArrow" class="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-800 transition-transform duration-300"></div>
+            </button>
+
+            <div id="dropdownMenu" class="absolute right-0 top-full bg-white min-w-48 shadow-lg rounded-lg z-50 opacity-0 invisible -translate-y-2 transition-all duration-300">
+                <a href="index.html" 
+                class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300 fullscreen-aware-link">
+                    About TelU
+                </a>
+                <a href="maps.html" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">
+                    TelU Map
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Background Video -->
+    <video id="videoElement" class="fixed inset-0 w-full h-full object-cover z-0" autoplay muted></video>
+
+    <!-- Main Container -->
+    <div class="fixed inset-0 top-[10vh] z-10 flex flex-col">
+        <!-- Main Content Area - Flex grow dengan padding bottom untuk control bar -->
+        <div class="flex-1 flex flex-col relative pb-[200px]">
+            
+            <!-- Top Control Strip - Floating -->
+            <div class="absolute top-4 left-4 right-4 z-30 flex justify-between items-center">
+                <!-- Camera Controls -->
+                <div class="flex justify-start gap-4">
+                    <!-- Video Toggle Button -->
+                    <button class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white w-12 h-12 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white border-opacity-20 flex items-center justify-center" 
+                            id="videoToggle" title="Toggle Kamera">
+                        <!-- Video On Icon (default) -->
+                        <svg class="w-6 h-6 video-on-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1Zm7 11-6-2V9l6-2v10Z"/>
+                        </svg>
+                        
+                        <!-- Video Off Icon (hidden by default) -->
+                        <svg class="w-6 h-6 video-off-icon hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1Zm7 11-6-2V9l6-2v10Z"/>
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 2L22 22"/>
+                        </svg>
+                    </button>
+                
+                    <!-- Fullscreen Toggle Button -->
+                    <button class="bg-black bg-opacity-50 hover:bg-opacity-70 text-white w-12 h-12 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white border-opacity-20 flex items-center justify-center" 
+                            id="fullscreen-toggle" title="Toggle Fullscreen">
+                        <i class="fas fa-expand text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Status Indicator -->
+                <div class="bg-black bg-opacity-60 backdrop-blur-sm rounded-full px-4 py-2">
+                    <div class="text-white text-sm font-medium" id="statusText">
+                        Klik tombol mikrofon untuk mulai
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages Area - Scrollable dengan padding yang cukup -->
+            <div class="flex-1 px-4 pt-20 overflow-y-auto" id="chatMessages"></div>
+        </div>
+
+        <!-- Bottom Control Bar - Fixed di bottom dengan positioning absolute -->
+        <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 backdrop-blur-md p-4 border-t border-white border-opacity-10">
+            <!-- Volume Indicator -->
+            <div class="mb-4 px-4">
+                <div class="h-2 bg-white bg-opacity-20 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-green-400 to-green-500 w-0 transition-all duration-100 rounded-full" 
+                         id="volumeBar">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Controls Row -->
+            <div class="flex justify-center items-center gap-6">
+                <!-- Clear Chat -->
+                <button class="bg-gray-600 bg-opacity-80 hover:bg-gray-500 hover:bg-opacity-90 text-white p-3 rounded-full shadow-lg transition-all duration-200 backdrop-blur-sm hover:scale-105" 
+                        id="clearChat" title="Bersihkan Chat">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                </button>
+
+                <!-- Main Mic Button -->
+                <button class="w-16 h-16 bg-red-500 bg-opacity-90 hover:bg-red-600 hover:bg-opacity-100 text-white text-2xl rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center backdrop-blur-sm disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100" 
+                        id="micButton" title="Tekan untuk berbicara">
+                    🎤
+                </button>
+
+                <!-- Send Manual -->
+                <button class="bg-blue-500 bg-opacity-80 hover:bg-blue-600 hover:bg-opacity-90 text-white p-3 rounded-full shadow-lg transition-all duration-200 backdrop-blur-sm hover:scale-105" 
+                        id="sendManual" title="Kirim Manual">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Transcript Area -->
+            <div class="mt-4 bg-black bg-opacity-40 rounded-lg p-3 backdrop-blur-sm border border-white border-opacity-10" id="transcriptInput">
+                <div class="text-white text-opacity-80 text-sm mb-2 min-h-[20px] leading-relaxed" id="transcriptContent">
+                    <span class="italic text-opacity-60">Mulai berbicara untuk melihat transcript di sini...</span>
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button class="bg-gray-500 bg-opacity-70 hover:bg-gray-400 hover:bg-opacity-80 text-white px-3 py-1 rounded-full text-xs transition-all duration-200 hover:scale-105" 
+                            id="clearTranscript">
+                        Clear
+                    </button>
+                    <button class="bg-blue-500 bg-opacity-70 hover:bg-blue-600 hover:bg-opacity-90 text-white px-3 py-1 rounded-full text-xs transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" 
+                            id="sendTranscript" 
+                            disabled>
+                        Send
+                    </button>
+                </div>
+            </div>
+
+            <!-- Permission Status (hidden by default) -->
+            <div class="text-center mt-2 text-green-300 text-xs hidden drop-shadow-md" id="permissionStatus"></div>
+        </div>
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="js/dropdown.js"></script>
+    <script src="js/fullscreen.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>

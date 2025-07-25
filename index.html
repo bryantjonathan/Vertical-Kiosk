@@ -1,50 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Telkom University</title>
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="images/telkom-favicon.png">
-  <link rel="shortcut icon" href="images/telkom-favicon.png">
-  <link rel="apple-touch-icon" href="images/telkom-favicon.png">
-  
+
+  <link rel="icon" type="image/png" href="images/telkom-favicon.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+
 <body class="m-0 p-0 h-full overflow-hidden bg-black font-sans">
   <!-- Top Bar -->
-  <div class="fixed top-0 left-0 w-full h-[10vh] bg-white flex items-center justify-between px-5 z-10">
-    <img src="images/telkom-logo.png" alt="Logo" class="h-28" />
-    
-    <!-- Dropdown About Menu -->
-    <div class="relative ml-auto group">
-      <button class="bg-white border-none text-gray-800 text-lg font-bold py-3 px-5 cursor-pointer rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:bg-gray-50">
-        About
-        <div class="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-800 transition-transform duration-300 group-hover:rotate-180"></div>
-      </button>
-      
-      <div class="hidden group-hover:block absolute right-0 top-full bg-white min-w-48 shadow-lg rounded-lg z-50 opacity-0 group-hover:opacity-100 -translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-        <a href="" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Akreditasi</a>
-        <a href="" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">X</a>
-        <a href="" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">Y</a>
+  <header class="fixed top-0 left-0 w-full h-[10vh] bg-white flex items-center justify-between px-5 z-20">
+    <div class="flex items-center gap-8">
+      <img src="images/telkom-logo.png" alt="Logo" class="h-28" onerror="this.style.display='none'" />
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800">About TelU</h1>
+        <p class="text-sm text-gray-600">Prestasi Telkom University</p>
       </div>
     </div>
-  </div>
-
-  <!-- Slideshow -->
-  <div class="absolute top-[10vh] left-0 w-full overflow-hidden" style="height: calc(90vh);" id="slideshow-container">
-    <div class="flex h-full transition-transform duration-500 ease-in-out" id="slides"></div>
-    <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-6 z-10" id="dots"></div>
     
-    <!-- Fullscreen Toggle Button -->
+    <!-- Dropdown Menu -->
+    <div class="relative ml-auto" id="dropdownWrapper">
+      <button id="dropdownToggle" class="bg-white border-none text-gray-800 text-lg font-bold py-3 px-5 cursor-pointer rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:bg-gray-50">
+        More
+        <div id="dropdownArrow" class="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-800 transition-transform duration-300"></div>
+      </button>
+
+      <div id="dropdownMenu" class="absolute right-0 top-full bg-white min-w-48 shadow-lg rounded-lg z-50 opacity-0 invisible -translate-y-2 transition-all duration-300">
+        <a href="chatbot.html" 
+        class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300 fullscreen-aware-link">
+          TelU Bot
+        </a>
+        <a href="maps.html" class="block px-4 py-3 text-gray-800 no-underline hover:bg-gray-100 transition-colors duration-300">
+          TelU Map
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Slideshow Container -->
+  <div class="absolute top-[10vh] left-0 w-full flex items-center overflow-hidden bg-gradient-to-br from-red-700 via-black to-red-900" style="height: calc(90vh);" id="slideshow-container">
+    <!-- Background Pattern/Blur -->
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-3xl"></div>
+    
+    <!-- Slides -->
+    <div class="flex w-full transition-transform duration-500 ease-in-out z-10" id="slides"></div>
+    
+    <!-- Dots Control -->
+    <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex gap-6 z-20" id="dots"></div>
+
+    <!-- Fullscreen Toggle Button-->
     <button id="fullscreen-toggle" class="absolute bottom-14 left-5 bg-black bg-opacity-50 hover:bg-opacity-70 text-white w-12 h-12 rounded-full transition-all duration-300 z-20 backdrop-blur-sm border border-white border-opacity-20 flex items-center justify-center">
       <i class="fas fa-expand text-lg"></i>
     </button>
   </div>
 
-  <script src="js/slideshow.js"></script>
+  <!-- JS Scripts -->
+  <script src="js/dropdown.js"></script>
   <script src="js/fullscreen.js"></script>
+  <script src="js/slideshow.js"></script>
 </body>
 </html>

@@ -32,7 +32,7 @@ class Slideshow {
         for (let i = 0; i < this.numSlides; i++) {
             const slide = document.createElement('div');
             slide.className = 'flex-shrink-0 w-full h-full bg-white flex items-center justify-center';
-            slide.innerHTML = `<img src="https://picsum.photos/1920/1080?random=${i}" alt="Image ${i + 1}" class="w-full h-full object-cover" />`;
+            slide.innerHTML = `<img src="images/content/telkom-university-images-${i+1}.jpg" alt="Image ${i + 1}" class="w-full h-full object-cover" />`;
             this.slidesContainer.appendChild(slide);
         }
     }
