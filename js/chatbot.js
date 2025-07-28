@@ -362,7 +362,7 @@ class VoiceChatbotApp {
         }
     }
 
-    sendToChatbot(message) {
+    async sendToChatbot(message) {
         if (!message.trim()) {
             this.showError('Pesan tidak boleh kosong.');
             return;
@@ -370,33 +370,74 @@ class VoiceChatbotApp {
 
         console.log('Sending message to chatbot:', message); // Debug log
 
-        // Add user message to chat
+        // Tambahkan pesan user ke chat
         const userMessageId = this.addMessage(message, 'user');
 
-        // Show typing indicator with unique ID
+        // Tampilkan indikator "bot sedang mengetik..."
         const typingId = this.addMessage('Bot sedang mengetik...', 'bot typing');
 
-        // Simulate chatbot response (replace with actual API call)
-        setTimeout(() => {
-            // Only remove typing indicator, not user message
-            this.removeMessage(typingId);
-            const response = this.generateBotResponse(message);
-            this.addMessage(response, 'bot');
-        }, 1500);
+        try {
+            // Dapatkan respons dari Flowise atau fallback
+            // FIXED: Changed from generateBotMessage(message) to this.generateBotMessage(message)
+            const response = await this.generateBotMessage(message);
 
-        // Clear transcript display after successfully sending
+            // Hapus indikator mengetik
+            this.removeMessage(typingId);
+
+            // Tambahkan pesan bot ke chat
+            this.addMessage(response, 'bot');
+        } catch (error) {
+            console.error("Gagal mengirim pesan ke chatbot:", error);
+            this.removeMessage(typingId);
+            this.addMessage("Terjadi kesalahan saat menghubungi chatbot.", 'bot');
+        }
+
+        // Kosongkan input/area transcript setelah mengirim
         this.resetTranscript();
     }
 
-    generateBotResponse(userMessage) {
-        const responses = [
-            `Terima kasih atas pesan Anda: "${userMessage}". Saya memahami maksud Anda.`,
-            `Menarik sekali! Anda mengatakan: "${userMessage}". Mari kita bahas lebih lanjut.`,
-            `Saya mendengar Anda berkata: "${userMessage}". Ada yang bisa saya bantu?`,
-            `Pesan Anda "${userMessage}" telah saya terima dengan baik. Bagaimana saya bisa membantu?`,
-            `Dari apa yang Anda sampaikan: "${userMessage}", saya dapat memberikan bantuan yang Anda butuhkan.`
-        ];
-        return responses[Math.floor(Math.random() * responses.length)];
+    async generateBotMessage(userMessage) {
+        const fallbackResponse = `Mohon maaf saya tidak mengerti maksud Anda: "${userMessage}". Silahkan coba lagi.`;
+
+        try {
+            const response = await fetch(
+                "https://cloud.flowiseai.com/api/v1/prediction/dd37bb27-a373-4d36-8be7-96b2e6744357",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                        // Tambahkan Authorization jika API kamu butuh: 
+                        // "Authorization": "Bearer YOUR_API_KEY"
+                    },
+                    body: JSON.stringify({ question: userMessage })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Flowise API response:', result); // Debug log
+
+            // Pastikan sesuai dengan format hasil API kamu
+            // Check multiple possible response formats
+            if (result.text) {
+                return result.text;
+            } else if (result.answer) {
+                return result.answer;
+            } else if (result.response) {
+                return result.response;
+            } else if (typeof result === 'string') {
+                return result;
+            } else {
+                console.warn('Unexpected API response format:', result);
+                return JSON.stringify(result);
+            }
+        } catch (error) {
+            console.warn("Gagal menghubungi Flowise:", error);
+            return fallbackResponse;
+        }
     }
 
     addMessage(text, type) {
