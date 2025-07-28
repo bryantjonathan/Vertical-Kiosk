@@ -396,8 +396,9 @@ class VoiceChatbotApp {
         this.resetTranscript();
     }
 
+    // Ganti method generateBotMessage di dalam class VoiceChatbotApp dengan ini:
     async generateBotMessage(userMessage) {
-        const fallbackResponse = `Mohon maaf saya tidak mengerti maksud Anda: "${userMessage}". Silahkan coba lagi.`;
+        const fallbackResponse = "Maaf saya tidak mengerti maksud Anda. Coba tanyakan saya seputar Telkom University.";
 
         try {
             const response = await fetch(
@@ -406,38 +407,120 @@ class VoiceChatbotApp {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
-                        // Tambahkan Authorization jika API kamu butuh: 
-                        // "Authorization": "Bearer YOUR_API_KEY"
                     },
                     body: JSON.stringify({ question: userMessage })
                 }
             );
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                console.warn(`API error! status: ${response.status}`);
+                return fallbackResponse;
             }
 
             const result = await response.json();
             console.log('Flowise API response:', result); // Debug log
 
-            // Pastikan sesuai dengan format hasil API kamu
-            // Check multiple possible response formats
+            // Ekstrak respons dari berbagai format yang mungkin
+            let botResponse = '';
             if (result.text) {
-                return result.text;
+                botResponse = result.text;
             } else if (result.answer) {
-                return result.answer;
+                botResponse = result.answer;
             } else if (result.response) {
-                return result.response;
+                botResponse = result.response;
             } else if (typeof result === 'string') {
-                return result;
+                botResponse = result;
             } else {
                 console.warn('Unexpected API response format:', result);
-                return JSON.stringify(result);
+                return fallbackResponse;
             }
+
+            // Cek kualitas respons - jika respons tidak berkualitas, gunakan fallback
+            if (this.isLowQualityResponse(botResponse)) {
+                return fallbackResponse;
+            }
+
+            return botResponse;
+
         } catch (error) {
             console.warn("Gagal menghubungi Flowise:", error);
             return fallbackResponse;
         }
+    }
+
+    // Tambahkan method baru ini di dalam class VoiceChatbotApp:
+    isLowQualityResponse(response) {
+        if (!response || typeof response !== 'string') {
+            return true;
+        }
+
+        const cleanResponse = response.trim().toLowerCase();
+        
+        // Jika respons terlalu pendek (kurang dari 10 karakter)
+        if (cleanResponse.length < 10) {
+            return true;
+        }
+
+        // Kata-kata/frasa yang menandakan respons tidak berkualitas
+        const lowQualityIndicators = [
+            'i don\'t understand',
+            'i cannot',
+            'i\'m not sure',
+            'i don\'t have information',
+            'i\'m sorry, but',
+            'maaf saya tidak tahu',
+            'saya tidak memiliki informasi',
+            'saya tidak dapat',
+            'mohon maaf saya tidak',
+            'tidak dapat membantu',
+            'saya kurang paham',
+            'bisa dijelaskan lebih',
+            'could you clarify',
+            'please provide more',
+            'i need more context',
+            'can you be more specific',
+            'saya tidak mengerti',
+            'tidak mengerti',
+            'kurang jelas',
+            'bisa diperjelas'
+        ];
+
+        // Cek apakah respons mengandung indikator kualitas rendah
+        for (const indicator of lowQualityIndicators) {
+            if (cleanResponse.includes(indicator)) {
+                return true;
+            }
+        }
+
+        // Jika respons hanya berisi pertanyaan balik tanpa informasi berguna
+        if (cleanResponse.includes('?') && 
+            (cleanResponse.includes('apa yang') || 
+            cleanResponse.includes('bisakah') || 
+            cleanResponse.includes('could you') || 
+            cleanResponse.includes('what do you') ||
+            cleanResponse.includes('maksud anda'))) {
+            return true;
+        }
+
+        // Jika respons generic/tidak spesifik dan pendek
+        const genericResponses = [
+            'how can i help',
+            'what would you like to know',
+            'anything else',
+            'ada yang bisa saya bantu',
+            'apa yang ingin anda ketahui',
+            'ada pertanyaan lain',
+            'silakan bertanya',
+            'bagaimana saya bisa membantu'
+        ];
+
+        for (const generic of genericResponses) {
+            if (cleanResponse.includes(generic) && cleanResponse.length < 50) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     addMessage(text, type) {
