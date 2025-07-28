@@ -1,1 +1,1 @@
-Vertical Kiosk for Telkom University is an interactive, touch-based information kiosk designed to help campus visitors access essential information about Telkom University. The kiosk provides contents such as achievements, chat bot, and interactive maps. It serves as a digital information center placed in public campus areas, offering a user-friendly and accessible interface.
+
