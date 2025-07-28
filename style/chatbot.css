@@ -12,7 +12,7 @@
     width: fit-content;
     word-wrap: break-word;
     margin-right: auto;
-    text-align: right;
+    text-align: left;
 }
 
 .message.user {
