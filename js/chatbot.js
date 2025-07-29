@@ -502,24 +502,6 @@ class VoiceChatbotApp {
             return true;
         }
 
-        // Jika respons generic/tidak spesifik dan pendek
-        const genericResponses = [
-            'how can i help',
-            'what would you like to know',
-            'anything else',
-            'ada yang bisa saya bantu',
-            'apa yang ingin anda ketahui',
-            'ada pertanyaan lain',
-            'silakan bertanya',
-            'bagaimana saya bisa membantu'
-        ];
-
-        for (const generic of genericResponses) {
-            if (cleanResponse.includes(generic) && cleanResponse.length < 50) {
-                return true;
-            }
-        }
-
         return false;
     }
 
