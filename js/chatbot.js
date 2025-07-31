@@ -465,7 +465,6 @@ class VoiceChatbotApp {
 
         try {
             // Dapatkan respons dari Flowise atau fallback
-            // FIXED: Changed from generateBotMessage(message) to this.generateBotMessage(message)
             const response = await this.generateBotMessage(message);
 
             // Hapus indikator mengetik
@@ -483,7 +482,6 @@ class VoiceChatbotApp {
         this.resetTranscript();
     }
 
-    // Ganti method generateBotMessage di dalam class VoiceChatbotApp dengan ini:
     async generateBotMessage(userMessage) {
         const fallbackResponse = "Maaf saya tidak mengerti maksud Anda. Coba tanyakan saya seputar Telkom University.";
 
@@ -542,11 +540,6 @@ class VoiceChatbotApp {
         }
 
         const cleanResponse = response.trim().toLowerCase();
-        
-        // Jika respons terlalu pendek (kurang dari 10 karakter)
-        if (cleanResponse.length < 10) {
-            return true;
-        }
 
         // Kata-kata/frasa yang menandakan respons tidak berkualitas
         const lowQualityIndicators = [
