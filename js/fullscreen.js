@@ -292,8 +292,8 @@ class FullscreenManager {
         notification.innerHTML = `
             <div class="flex flex-col gap-4 text-center">
                 <div class="flex flex-col items-center gap-3">
-                    <div class="bg-blue-600 bg-opacity-20 p-4 rounded-full">
-                        <i class="fas fa-expand text-blue-400 text-2xl"></i>
+                    <div class="bg-blue-600 bg-opacity-20 rounded-full w-12 h-12 flex items-center justify-center">
+                        <i class="fas fa-expand text-blue-400 text-xl"></i>
                     </div>
                     <div>
                         <div class="text-lg font-medium mb-2">Mode Fullscreen Terdeteksi</div>
@@ -305,7 +305,7 @@ class FullscreenManager {
                 </div>
                 
                 <div class="flex justify-center">
-                    <button id="restore-fullscreen-btn" class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg text-sm transition-all duration-200 hover:scale-105 font-medium shadow-lg">
+                    <button id="restore-fullscreen-btn" class="flex justify-center items-center bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg text-sm transition-all duration-200 hover:scale-105 font-medium shadow-lg">
                         <i class="fas fa-expand mr-2"></i>
                         Aktifkan Fullscreen
                     </button>
