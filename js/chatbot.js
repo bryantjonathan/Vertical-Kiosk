@@ -28,6 +28,7 @@ class VoiceChatbotApp {
 
         this.init();
         this.setupEventListeners();
+        this.createManualMessageModal();
     }
 
     init() {
@@ -146,6 +147,92 @@ class VoiceChatbotApp {
         }
     }
 
+    createManualMessageModal() {
+        // Create modal HTML
+        const modalHTML = `
+            <div id="manualMessageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-lg p-6 w-96 max-w-90vw">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">Masukkan Pesan Manual</h3>
+                    <textarea 
+                        id="manualMessageInput" 
+                        class="w-full h-24 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Ketik pesan Anda di sini..."
+                    ></textarea>
+                    <div class="flex justify-end space-x-3 mt-4">
+                        <button 
+                            id="cancelManualMessage" 
+                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                        >
+                            Batal
+                        </button>
+                        <button 
+                            id="sendManualMessageBtn" 
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                        >
+                            Kirim
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add modal to document body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Get modal elements
+        this.manualMessageModal = document.getElementById('manualMessageModal');
+        this.manualMessageInput = document.getElementById('manualMessageInput');
+        
+        // Setup modal event listeners
+        document.getElementById('cancelManualMessage').addEventListener('click', () => {
+            this.hideManualMessageModal();
+        });
+        
+        document.getElementById('sendManualMessageBtn').addEventListener('click', () => {
+            this.handleManualMessageSend();
+        });
+        
+        // Close modal when clicking outside
+        this.manualMessageModal.addEventListener('click', (e) => {
+            if (e.target === this.manualMessageModal) {
+                this.hideManualMessageModal();
+            }
+        });
+        
+        // Handle Enter key in textarea (Ctrl+Enter to send)
+        this.manualMessageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                this.handleManualMessageSend();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.hideManualMessageModal();
+            }
+        });
+    }
+
+    showManualMessageModal() {
+        this.manualMessageModal.classList.remove('hidden');
+        this.manualMessageInput.value = '';
+        this.manualMessageInput.focus();
+    }
+
+    hideManualMessageModal() {
+        this.manualMessageModal.classList.add('hidden');
+        this.manualMessageInput.value = '';
+    }
+
+    handleManualMessageSend() {
+        const message = this.manualMessageInput.value.trim();
+        if (message) {
+            this.hideManualMessageModal();
+            this.sendToChatbot(message);
+        } else {
+            // Show error or just focus back to input
+            this.manualMessageInput.focus();
+        }
+    }
+
     setupEventListeners() {
         // Initialize video toggle
         this.videoToggle = new VideoToggle('videoElement', 'videoToggle');
@@ -159,7 +246,7 @@ class VoiceChatbotApp {
 
         // Chat controls
         document.getElementById('clearChat').addEventListener('click', () => this.clearChat());
-        document.getElementById('sendManual').addEventListener('click', () => this.sendManualMessage());
+        document.getElementById('sendManual').addEventListener('click', () => this.showManualMessageModal());
     }
 
     async requestMicrophonePermission() {
@@ -541,10 +628,9 @@ class VoiceChatbotApp {
     }
 
     sendManualMessage() {
-        const message = prompt('Masukkan pesan manual:');
-        if (message && message.trim()) {
-            this.sendToChatbot(message.trim());
-        }
+        // This method is now replaced by showManualMessageModal()
+        // Keeping it for backward compatibility, but it just calls the new modal
+        this.showManualMessageModal();
     }
 
     showError(message) {
@@ -594,6 +680,11 @@ class VoiceChatbotApp {
         
         if (this.autoSendTimeout) {
             clearTimeout(this.autoSendTimeout);
+        }
+
+        // Cleanup manual message modal
+        if (this.manualMessageModal) {
+            this.manualMessageModal.remove();
         }
     }
 }
