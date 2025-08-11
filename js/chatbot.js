@@ -525,7 +525,7 @@ class VoiceChatbotApp {
                 return fallbackResponse;
             }
 
-            return botResponse;
+            return botResponse.replace(/AI Assistant/gi, "TelU Bot").trim();
 
         } catch (error) {
             console.warn("Gagal menghubungi Flowise:", error);
